@@ -29,7 +29,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "http://localhost:3000/dashboard",
       });
     } catch (error) {
       toast.error("Failed to sign in with Google");
