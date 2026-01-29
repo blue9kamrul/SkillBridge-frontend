@@ -20,6 +20,16 @@ const eslintConfig = [
       "node_modules/**",
     ],
   },
+  {
+    rules: {
+      "react/no-children-prop": [
+        "error",
+        {
+          allowFunctions: true,
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;
