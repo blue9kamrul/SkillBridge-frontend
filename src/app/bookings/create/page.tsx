@@ -26,8 +26,16 @@ export default function CreateBookingPage() {
       credentials: "include",
       body: JSON.stringify(data),
     });
-    const result = await res.json();
-    if (result.success) {
+    let result;
+    try {
+      result = await res.json();
+    } catch {
+      result = {};
+    }
+    if (res.status === 401 || res.status === 403) {
+      toast.error("You must login before creating a booking.");
+      router.push("/login");
+    } else if (result.success) {
       toast.success("Booking created!");
       router.push("/bookings");
     } else {

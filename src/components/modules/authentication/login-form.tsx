@@ -85,7 +85,10 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               validators={{
                 onChange: ({ value }) => {
                   const result = z.string().email("Invalid email address").safeParse(value);
-                  return !result.success ? result.error.errors[0].message : undefined;
+                  if (!result.success) {
+                    return result.error.issues[0].message;
+                  }
+                  return undefined;
                 },
               }}
               children={(field) => {
@@ -114,7 +117,10 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               validators={{
                 onChange: ({ value }) => {
                   const result = z.string().min(1, "Password is required").safeParse(value);
-                  return !result.success ? result.error.errors[0].message : undefined;
+                  if (!result.success) {
+                    return result.error.issues[0].message;
+                  }
+                  return undefined;
                 },
               }}
               children={(field) => {

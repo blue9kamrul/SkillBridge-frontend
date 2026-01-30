@@ -30,29 +30,35 @@ export default function BookingsPage() {
           {bookings.length === 0 ? (
             <p className="text-muted-foreground">No bookings found</p>
           ) : (
-            bookings.map((booking) => (
-              <Card key={booking.id}>
-                <CardHeader>
-                  <CardTitle>Booking with {booking.tutor?.user?.name || booking.student?.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-2">
-                    <div>
-                      <span className="font-medium">Status:</span> {booking.status}
+            bookings.map((booking) => {
+              // Show the other party's name: if user is student, show tutor; if tutor, show student
+              const otherParty = booking.tutor?.user?.name || booking.student?.name || booking.tutor?.user?.email || booking.student?.email;
+              return (
+                <Card key={booking.id}>
+                  <CardHeader>
+                    <CardTitle>
+                      Booking with {otherParty}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-2">
+                      <div>
+                        <span className="font-medium">Status:</span> {booking.status}
+                      </div>
+                      <div>
+                        <span className="font-medium">Start:</span> {new Date(booking.startTime).toLocaleString()}
+                      </div>
+                      <div>
+                        <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
+                      </div>
+                      <a href={`/bookings/${booking.id}`}>
+                        <Button size="sm" variant="outline">View Details</Button>
+                      </a>
                     </div>
-                    <div>
-                      <span className="font-medium">Start:</span> {new Date(booking.startTime).toLocaleString()}
-                    </div>
-                    <div>
-                      <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
-                    </div>
-                    <a href={`/bookings/${booking.id}`}>
-                      <Button size="sm" variant="outline">View Details</Button>
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+                  </CardContent>
+                </Card>
+              );
+            })
           )}
         </div>
       </div>

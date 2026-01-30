@@ -57,7 +57,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
         }
 
         toast.success("Account created successfully!", { id: toastId });
-        router.push("/dashboard");
+        router.push("/");
       } catch (err) {
         console.error("Registration error:", err);
         toast.error("Something went wrong. Please try again.", { id: toastId });
@@ -87,7 +87,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
               validators={{
                 onChange: ({ value }) => {
                   const result = z.string().min(1, "Name is required").safeParse(value);
-                  return !result.success ? result.error.errors[0].message : undefined;
+                  return !result.success ? result.error.issues[0].message : undefined;
                 },
               }}
               children={(field) => {
@@ -116,7 +116,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
               validators={{
                 onChange: ({ value }) => {
                   const result = z.string().email("Invalid email address").safeParse(value);
-                  return !result.success ? result.error.errors[0].message : undefined;
+                  return !result.success ? result.error.issues[0].message : undefined;
                 },
               }}
               children={(field) => {
@@ -145,7 +145,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
               validators={{
                 onChange: ({ value }) => {
                   const result = z.string().min(8, "Password must be at least 8 characters").safeParse(value);
-                  return !result.success ? result.error.errors[0].message : undefined;
+                  return !result.success ? result.error.issues[0].message : undefined;
                 },
               }}
               children={(field) => {

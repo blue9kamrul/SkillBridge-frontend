@@ -12,7 +12,7 @@ export default function BookingDetailsPage() {
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   // Remove status state for cancel, only use for complete
-  const [status, setStatus] = useState("");
+  // Remove status state, always set to 'completed' when tutor marks as complete
   const [updating, setUpdating] = useState(false);
 
   const fetchBooking = async () => {
@@ -64,7 +64,7 @@ export default function BookingDetailsPage() {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status: "completed" }),
     });
     const data = await res.json();
     if (data.success) {
@@ -125,17 +125,8 @@ export default function BookingDetailsPage() {
               )}
               {canComplete && (
                 <form onSubmit={handleComplete} className="flex items-center gap-2 mb-2">
-                  <label className="font-medium">Status:</label>
-                  <select
-                    value={status}
-                    onChange={e => setStatus(e.target.value)}
-                    className="border rounded px-2 py-1"
-                    disabled={updating}
-                  >
-                    <option value="completed">completed</option>
-                  </select>
-                  <Button size="sm" type="submit" disabled={updating || status === booking.status}>
-                    {updating ? "Updating..." : "Mark Completed"}
+                  <Button size="sm" type="submit" disabled={updating}>
+                    {updating ? "Updating..." : "Mark as Completed"}
                   </Button>
                 </form>
               )}
