@@ -17,6 +17,7 @@ const navConfig = {
   ],
   tutor: [
     { href: "/dashboard", label: "Dashboard" },
+    { href: "/profile", label: "Profile" },
     { href: "/reviews", label: "My Reviews" },
     { href: "/tutors", label: "All Tutors" },
     { href: "/bookings", label: "My Bookings" },
@@ -27,6 +28,7 @@ const navConfig = {
     { href: "/categories", label: "Categories" },
     { href: "/reviews", label: "All Reviews" },
     { href: "/bookings/all", label: "All Bookings" },
+    { href: "/profile", label: "Profile" },
   ],
 };
 
@@ -34,7 +36,6 @@ export function Navbar() {
   const { user, loading } = useCurrentUser();
   const pathname = usePathname();
 
-  if (pathname.startsWith("/dashboard")) return null;
 
   let links = [...navConfig.common];
   if (!loading && user) {

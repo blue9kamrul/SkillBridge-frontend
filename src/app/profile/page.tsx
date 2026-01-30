@@ -26,8 +26,13 @@ export default function ProfilePage() {
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   if (!profile) return <div className="flex min-h-screen items-center justify-center">Profile not found</div>;
 
+  const handleLogout = async () => {
+    await fetch("http://localhost:5000/api/auth/logout", { method: "POST", credentials: "include" });
+    window.location.href = "/";
+  };
+
   return (
-    <div className="min-h-screen bg-background px-6 py-16">
+    <div className="min-h-screen bg-background px-6 py-16 flex flex-col justify-between">
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">My Profile</h1>
@@ -64,6 +69,9 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+      <div className="mx-auto max-w-2xl w-full flex justify-end mt-8">
+        <Button variant="outline" onClick={handleLogout}>Logout</Button>
       </div>
     </div>
   );
