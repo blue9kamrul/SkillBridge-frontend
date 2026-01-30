@@ -11,8 +11,7 @@ export default function BookingDetailsPage() {
   const router = useRouter();
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  // Remove status state for cancel, only use for complete
-  // Remove status state, always set to 'completed' when tutor marks as complete
+  // Only use booking.status from backend, no local status state
   const [updating, setUpdating] = useState(false);
 
   const fetchBooking = async () => {
@@ -22,7 +21,6 @@ export default function BookingDetailsPage() {
       const data = await res.json();
       if (data.success) {
         setBooking(data.data);
-        setStatus(data.data.status);
       } else {
         toast.error("Failed to load booking");
       }
