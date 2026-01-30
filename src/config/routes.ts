@@ -35,3 +35,43 @@ export const studentRoutes: Route[] = [
     ],
   },
 ];
+
+export const tutorRoutes: Route[] = [
+  {
+    title: "Tutor",
+    items: [
+      {
+        title: "My Profile",
+        url: "/tutor/profile",
+      },
+      {
+        title: "Find Tutors",
+        url: "/tutors",
+      },
+      {
+        title: "Become a Tutor",
+        url: "/tutors/become-tutor",
+      },
+    ],
+  },
+];
+
+export const publicRoutes: Route[] = [
+  {
+    title: "Public",
+    items: [
+      {
+        title: "Browse Tutors",
+        url: "/tutors",
+      },
+      {
+        title: "About",
+        url: "/about",
+      },
+      {
+        title: "Contact",
+        url: "/contact",
+      },
+    ],
+  },
+];
