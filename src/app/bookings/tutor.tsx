@@ -12,13 +12,24 @@ export default function TutorBookingsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/bookings", { credentials: "include" })
-      .then((res) => res.json())
+    fetch("http://localhost:5000/api/bookings/tutor", { credentials: "include" })
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("API error:", res.status, text);
+          toast.error(`Failed to load bookings: ${res.status}`);
+          return { success: false };
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data.success) setBookings(data.data);
         else toast.error("Failed to load bookings");
       })
-      .catch(() => toast.error("Failed to load bookings"))
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        toast.error("Failed to load bookings");
+      })
       .finally(() => setLoading(false));
   }, []);
 

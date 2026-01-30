@@ -29,7 +29,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "http://localhost:3000/dashboard",
+        callbackURL: "http://localhost:3000/",
       });
     } catch (error) {
       toast.error("Failed to sign in with Google");
@@ -60,7 +60,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         }
 
         toast.success("Signed in successfully!", { id: toastId });
-        router.push("/dashboard");
+        router.push("/");
       } catch (err) {
         console.error("Login error:", err);
         toast.error("Something went wrong. Please try again.", { id: toastId });
