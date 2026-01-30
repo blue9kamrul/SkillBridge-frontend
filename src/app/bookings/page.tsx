@@ -4,32 +4,22 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { useCurrentUser } from "@/lib/use-current-user";
+
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const { user, loading: userLoading } = useCurrentUser();
 
   useEffect(() => {
-    // Fetch current user from /api/auth/me, then bookings
-    fetch("http://localhost:5000/api/auth/me", { credentials: "include" })
+    fetch("http://localhost:5000/api/bookings", { credentials: "include" })
       .then((res) => res.json())
-      .then((userData) => {
-        setUser(userData?.user || null);
-        // Debug: log user info
-        console.log("Current user:", userData?.user);
-        return fetch("http://localhost:5000/api/bookings", { credentials: "include" });
-      })
-      .then((res) => res?.json?.() ?? {})
       .then((data) => {
         if (data.success) setBookings(data.data);
         else toast.error("Failed to load bookings");
       })
-      .catch(() => {
-        setUser(null);
-        toast.error("Failed to load bookings");
-      })
+      .catch(() => toast.error("Failed to load bookings"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -48,7 +38,7 @@ export default function BookingsPage() {
     }
   };
 
-  if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  if (loading || userLoading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-background px-6 py-16">
@@ -59,8 +49,16 @@ export default function BookingsPage() {
           <div className="mb-4 p-2 bg-gray-100 rounded text-sm text-gray-700">
             <strong>Logged in as:</strong> {user.name || user.email} <br />
             <strong>Role:</strong> {user.role}
+            <br />
           </div>
         )}
+        <div className="flex gap-4 mb-6">
+          {user?.role === "STUDENT" && (
+            <a href="/bookings/create">
+              <Button>Create New Booking</Button>
+            </a>
+          )}
+        </div>
         <div className="space-y-4">
           {bookings.length === 0 ? (
             <p className="text-muted-foreground">No bookings found</p>
@@ -69,6 +67,8 @@ export default function BookingsPage() {
               const otherParty = booking.tutor?.user?.name || booking.student?.name || booking.tutor?.user?.email || booking.student?.email;
               // Admin can delete any booking
               const canDelete = user?.role === "ADMIN";
+              // Student can review completed bookings if not already reviewed
+              const canReview = user?.role === "STUDENT" && booking.status === "completed" && !booking.reviewedByStudent;
               return (
                 <Card key={booking.id}>
                   <CardHeader>
@@ -87,9 +87,16 @@ export default function BookingsPage() {
                       <div>
                         <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
                       </div>
-                      <a href={`/bookings/${booking.id}`}>
-                        <Button size="sm" variant="outline">View Details</Button>
-                      </a>
+                      <div className="flex gap-2">
+                        <a href={`/bookings/${booking.id}`}>
+                          <Button size="sm" variant="outline">View Details</Button>
+                        </a>
+                        {canReview && (
+                          <a href={`/reviews/create?tutorId=${booking.tutorId}`}>
+                            <Button size="sm" variant="default">Give Review</Button>
+                          </a>
+                        )}
+                      </div>
                       {canDelete && (
                         <Button size="sm" variant="destructive" onClick={() => handleDelete(booking.id)}>
                           Delete

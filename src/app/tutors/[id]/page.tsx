@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { useCurrentUser } from "@/lib/use-current-user";
+import { deleteReview } from "@/lib/review-api";
 
 export default function TutorDetailsPage() {
+  const { user, loading: userLoading } = useCurrentUser();
   const params = useParams();
   const [tutor, setTutor] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +24,7 @@ export default function TutorDetailsPage() {
       .finally(() => setLoading(false));
   }, [params.id]);
 
-  if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  if (loading || userLoading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   if (!tutor) return <div className="flex min-h-screen items-center justify-center">Tutor not found</div>;
 
   const avgRating = tutor.reviews?.length
@@ -31,6 +34,12 @@ export default function TutorDetailsPage() {
   return (
     <div className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-4xl space-y-6">
+        <button
+          className="mb-4 px-4 py-2 rounded bg-muted hover:bg-muted/70 border border-border text-base"
+          onClick={() => window.history.back()}
+        >
+          Back
+        </button>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">{tutor.user.name}</CardTitle>
@@ -56,6 +65,8 @@ export default function TutorDetailsPage() {
                 </div>
               </div>
 
+
+              {/* Bio and Subjects */}
               <div>
                 <p className="text-sm text-muted-foreground">Bio</p>
                 <p className="mt-1">{tutor.bio || "No bio available"}</p>
@@ -71,6 +82,52 @@ export default function TutorDetailsPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Reviews */}
+              {tutor.reviews && tutor.reviews.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-bold mb-2">Reviews</h3>
+                  <div className="space-y-4">
+                    {tutor.reviews.map((review: any) => {
+                      const canDelete = user && (user.role === "ADMIN" || user.id === review.studentId);
+                      return (
+                        <Card key={review.id} className="bg-muted">
+                          <CardContent className="py-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-semibold">{review.student?.name || "Student"}</span>
+                              <span className="text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+                              <span className="text-xs text-muted-foreground ml-2">{new Date(review.createdAt).toLocaleDateString()}</span>
+                              {canDelete && (
+                                <button
+                                  className="ml-4 px-2 py-1 rounded bg-destructive text-white text-xs hover:bg-destructive/80"
+                                  onClick={async () => {
+                                    if (!confirm("Are you sure you want to delete this review?")) return;
+                                    try {
+                                      await deleteReview(review.id);
+                                      toast.success("Review deleted");
+                                      // Remove review from UI
+                                      setTutor((prev: any) => ({
+                                        ...prev,
+                                        reviews: prev.reviews.filter((r: any) => r.id !== review.id),
+                                      }));
+                                    } catch (e: any) {
+                                      toast.error(e.message || "Failed to delete review");
+                                    }
+                                  }}
+                                >
+                                  Delete
+                                </button>
+                              )}
+                            </div>
+                            <div className="text-base">{review.comment || <span className="text-muted-foreground">No comment</span>}</div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
             </div>
           </CardContent>
         </Card>

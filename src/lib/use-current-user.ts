@@ -5,13 +5,13 @@ export function useCurrentUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000") +
-        "/api/auth/me",
-      {
-        credentials: "include",
-      },
-    )
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api")
+      ? `${base}/auth/me`
+      : `${base}/api/auth/me`;
+    fetch(url, {
+      credentials: "include",
+    })
       .then((res) =>
         res.ok ? res.json() : Promise.reject("Not authenticated"),
       )

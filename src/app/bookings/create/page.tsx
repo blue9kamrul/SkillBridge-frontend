@@ -71,6 +71,9 @@ export default function CreateBookingPage() {
                 {loading ? "Creating..." : "Create Booking"}
               </Button>
             </form>
+            <div className="mt-6 text-center">
+              <Button variant="outline" onClick={() => window.location.href = '/bookings'}>Back</Button>
+            </div>
           </CardContent>
         </Card>
       </div>
