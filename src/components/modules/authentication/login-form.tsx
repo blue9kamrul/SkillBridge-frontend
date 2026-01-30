@@ -54,6 +54,11 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           return;
         }
 
+        // Store token in localStorage if present
+        if (data && data.token) {
+          localStorage.setItem("token", data.token);
+        }
+
         toast.success("Signed in successfully!", { id: toastId });
         router.push("/dashboard");
       } catch (err) {
