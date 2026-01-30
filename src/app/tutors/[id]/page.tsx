@@ -34,12 +34,22 @@ export default function TutorDetailsPage() {
   return (
     <div className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-4xl space-y-6">
-        <button
-          className="mb-4 px-4 py-2 rounded bg-muted hover:bg-muted/70 border border-border text-base"
-          onClick={() => window.history.back()}
-        >
-          Back
-        </button>
+        <div className="flex items-center gap-4 mb-4">
+          <button
+            className="px-4 py-2 rounded bg-muted hover:bg-muted/70 border border-border text-base"
+            onClick={() => window.history.back()}
+          >
+            Back
+          </button>
+          {user?.role === "STUDENT" && (
+            <a
+              href={`/bookings/create?tutorId=${params.id}`}
+              className="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90 border border-primary text-base"
+            >
+              Create Booking
+            </a>
+          )}
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">{tutor.user.name}</CardTitle>

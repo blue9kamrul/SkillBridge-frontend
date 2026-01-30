@@ -53,11 +53,6 @@ export default function BookingsPage() {
           </div>
         )}
         <div className="flex gap-4 mb-6">
-          {user?.role === "STUDENT" && (
-            <a href="/bookings/create">
-              <Button>Create New Booking</Button>
-            </a>
-          )}
         </div>
         <div className="space-y-4">
           {bookings.length === 0 ? (

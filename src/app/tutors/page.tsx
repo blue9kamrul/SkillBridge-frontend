@@ -25,6 +25,13 @@ export default function TutorsPage() {
   return (
     <div className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-6xl space-y-6">
+        <button
+          className="mb-4 px-4 py-2 border rounded text-sm hover:bg-muted"
+          type="button"
+          onClick={() => window.history.back()}
+        >
+          Back
+        </button>
         <h1 className="text-3xl font-bold">Find a Tutor</h1>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

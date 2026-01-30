@@ -65,14 +65,12 @@ export default function CategoriesPage() {
                     <div className="font-medium">{cat.name}</div>
                     {cat.description && <div className="text-sm text-muted-foreground">{cat.description}</div>}
                   </div>
-                  {user?.role === "ADMIN"
-                    ? (
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" onClick={() => router.push(`/categories/edit/${cat.id}`)}>Edit</Button>
-                          <Button size="sm" variant="destructive" onClick={() => handleDelete(cat.id)}>Delete</Button>
-                        </div>
-                      )
-                    : null}
+                  {user?.role === "ADMIN" && (
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" onClick={() => router.push(`/categories/edit/${cat.id}`)}>Edit</Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDelete(cat.id)}>Delete</Button>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

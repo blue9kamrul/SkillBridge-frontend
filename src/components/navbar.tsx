@@ -16,10 +16,10 @@ const navConfig = {
     { href: "/tutors/become-tutor", label: "Become a Tutor" },
   ],
   tutor: [
-    { href: "/tutor/profile", label: "Tutor Profile" },
+    { href: "/dashboard", label: "Dashboard" },
     { href: "/reviews", label: "My Reviews" },
     { href: "/tutors", label: "All Tutors" },
-    { href: "/bookings/tutor", label: "Bookings for Me" },
+    { href: "/bookings", label: "My Bookings" },
   ],
   admin: [
     { href: "/admin/dashboard", label: "Admin Dashboard" },

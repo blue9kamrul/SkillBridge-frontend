@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
 export default function CreateBookingPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tutorIdFromQuery = searchParams.get("tutorId") || "";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,7 +57,7 @@ export default function CreateBookingPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-sm font-medium">Tutor ID</label>
-                <Input name="tutorId" required />
+                <Input name="tutorId" required value={tutorIdFromQuery} readOnly={!!tutorIdFromQuery} />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
