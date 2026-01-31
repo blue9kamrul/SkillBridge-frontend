@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/LoadingButton";
+import { apiFetch } from "@/lib/apiFetch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -28,21 +30,32 @@ export default function EditProfilePage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/students/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(formData),
-    });
-    const data = await response.json();
-    
-    if (data.success) {
-      toast.success("Profile updated!");
-      router.push("/profile");
-    } else {
-      toast.error("Failed to update profile");
+  const handleSubmit = async () => {
+    // basic validation
+    if (!formData.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+    if (formData.image && !/^https?:\/\/.+/.test(formData.image)) {
+      toast.error("Profile Image URL must be a valid http(s) URL");
+      return;
+    }
+
+    try {
+      const data = await apiFetch("http://localhost:5000/api/students/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
+      if (data.success) {
+        toast.success("Profile updated!");
+        router.push("/profile");
+      } else {
+        toast.error(data.message || "Failed to update profile");
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Failed to update profile");
     }
   };
 
@@ -57,7 +70,7 @@ export default function EditProfilePage() {
             <CardTitle>Update Your Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit}>
+            <div>
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="name">Name</FieldLabel>
@@ -85,13 +98,13 @@ export default function EditProfilePage() {
                   />
                 </Field>
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                    <Button type="submit" className="w-full sm:flex-1">Save</Button>
+                    <LoadingButton onClick={handleSubmit} className="w-full sm:flex-1">Save</LoadingButton>
                     <Button type="button" variant="outline" className="w-full sm:flex-1" onClick={() => router.push("/profile")}> 
                       Cancel
                     </Button>
                   </div>
               </FieldGroup>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>

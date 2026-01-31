@@ -22,6 +22,19 @@ export default function TutorDetailsPage() {
       .finally(() => setLoading(false));
   }, [params.id]);
 
+  const deleteReview = async (reviewId: string | number) => {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/reviews/${reviewId}` : `${base}/api/reviews/${reviewId}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data?.success) throw new Error(data?.message || "Failed to delete review");
+    return data;
+  };
+
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   if (!tutor) return <div className="flex min-h-screen items-center justify-center">Tutor not found</div>;
 
@@ -39,7 +52,7 @@ export default function TutorDetailsPage() {
           >
             Back
           </button>
-          {user?.role === "STUDENT" && (
+          {(user as any)?.role === "STUDENT" && (
             <a
               href={`/bookings/create?tutorId=${params.id}`}
               className="w-full sm:w-auto px-4 py-2 rounded bg-primary text-white hover:bg-primary/90 border border-primary text-base text-center"
@@ -105,16 +118,16 @@ export default function TutorDetailsPage() {
                   <h3 className="text-lg font-bold mb-2">Reviews</h3>
                   <div className="space-y-4">
                     {tutor.reviews.map((review: any) => {
-                      const canDelete = user && (user.role === "ADMIN" || user.id === review.studentId);
+                      const canDelete = user && (((user as any).role === "ADMIN") || ((user as any).id === review.studentId));
                       return (
                         <Card key={review.id} className="bg-muted">
                           <CardContent className="py-4">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-1">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-semibold">{review.student?.name || "Student"}</span>
-                                  <span className="text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
-                                  <span className="text-xs text-muted-foreground ml-2">{new Date(review.createdAt).toLocaleDateString()}</span>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-semibold truncate">{review.student?.name || "Student"}</span>
+                                  <span className="text-yellow-500 text-sm flex-shrink-0">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+                                  <span className="text-xs text-muted-foreground ml-2 whitespace-nowrap flex-shrink-0">{new Date(review.createdAt).toLocaleDateString()}</span>
                                 </div>
                               </div>
                               {canDelete && (

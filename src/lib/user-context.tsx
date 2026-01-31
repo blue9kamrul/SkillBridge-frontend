@@ -1,9 +1,15 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export const UserContext = createContext({
+type UserType = any | null;
+type UserContextType = {
+  user: UserType;
+  setUser: (u: UserType) => void;
+};
+
+export const UserContext = createContext<UserContextType>({
   user: null,
-  setUser: (_user: any) => {},
+  setUser: (_user: UserType) => {},
 });
 
 export function UserProvider({ children }: { children: React.ReactNode }) {

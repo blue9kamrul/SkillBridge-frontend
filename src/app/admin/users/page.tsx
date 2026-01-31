@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/LoadingButton";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -33,12 +34,12 @@ export default function AdminUsers() {
       body: JSON.stringify({ status }),
     });
     const data = await response.json();
-    
+
     if (data.success) {
       toast.success(`User ${status === "BANNED" ? "banned" : "activated"}`);
       loadUsers();
     } else {
-      toast.error("Failed to update status");
+      toast.error(data.message || "Failed to update status");
     }
   };
 
@@ -100,45 +101,57 @@ export default function AdminUsers() {
 
                   <div className="flex flex-col sm:flex-row gap-2">
                     {user.status !== "BANNED" ? (
-                      <Button
+                      <LoadingButton
                         size="sm"
                         variant="destructive"
                         className="w-full sm:w-auto"
-                        onClick={() => updateStatus(user.id, "BANNED")}
+                        onClick={async () => {
+                          if (!confirm('Ban this user?')) return;
+                          await updateStatus(user.id, "BANNED");
+                        }}
                       >
                         Ban User
-                      </Button>
+                      </LoadingButton>
                     ) : (
-                      <Button
+                      <LoadingButton
                         size="sm"
                         variant="outline"
                         className="w-full sm:w-auto"
-                        onClick={() => updateStatus(user.id, "ACTIVE")}
+                        onClick={async () => {
+                          if (!confirm('Unban this user?')) return;
+                          await updateStatus(user.id, "ACTIVE");
+                        }}
                       >
                         Unban User
-                      </Button>
+                      </LoadingButton>
                     )}
                     
                     {user.role !== "TUTOR" && (
-                      <Button
+                      <LoadingButton
                         size="sm"
                         variant="outline"
                         className="w-full sm:w-auto"
-                        onClick={() => updateRole(user.id, "TUTOR")}
+                        onClick={async () => {
+                          if (!confirm('Promote user to Tutor?')) return;
+                          await updateRole(user.id, "TUTOR");
+                        }}
                       >
                         Make Tutor
-                      </Button>
+                      </LoadingButton>
                     )}
                     
                     {user.role !== "STUDENT" && (
-                      <Button
+                      <LoadingButton
                         size="sm"
                         variant="outline"
                         className="w-full sm:w-auto"
-                        onClick={() => updateRole(user.id, "STUDENT")}
+                        onClick={async () => {
+                          if (!confirm('Demote user to Student?')) return;
+                          await updateRole(user.id, "STUDENT");
+                        }}
                       >
                         Make Student
-                      </Button>
+                      </LoadingButton>
                     )}
                   </div>
                 </div>
