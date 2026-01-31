@@ -6,8 +6,6 @@ export async function getAllReviews() {
   if (!res.ok) throw new Error("Failed to fetch reviews");
   return res.json();
 }
-import { getSession } from "./auth-client";
-
 const rawBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 export const API_BASE = rawBase.endsWith("/api") ? rawBase : `${rawBase}/api`;
 
