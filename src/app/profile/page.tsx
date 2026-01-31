@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@/lib/user-context";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -13,7 +14,11 @@ export default function ProfilePage() {
   }
 
   const handleLogout = async () => {
-    await fetch("http://localhost:5000/api/auth/logout", { method: "POST", credentials: "include" });
+    await authClient.signOut({
+      fetchOptions: {
+        credentials: "include",
+      },
+    });
     setUser(null);
     window.location.href = "/";
   };
