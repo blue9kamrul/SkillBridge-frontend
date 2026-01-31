@@ -12,7 +12,9 @@ export default function TutorDetailsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/tutors/${params.id}`, { credentials: "include" })
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/tutors/${params.id}` : `${base}/api/tutors/${params.id}`;
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setTutor(data.data);

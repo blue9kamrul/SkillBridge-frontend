@@ -1,5 +1,6 @@
 export async function apiFetch(input: RequestInfo, init?: RequestInit) {
-  const res = await fetch(input, init);
+  const finalInit: RequestInit = { credentials: "include", ...init };
+  const res = await fetch(input, finalInit);
   const contentType = res.headers.get("content-type") || "";
 
   let body: any = null;
