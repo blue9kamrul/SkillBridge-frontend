@@ -84,12 +84,12 @@ export default function EditProfilePage() {
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                   />
                 </Field>
-                <div className="flex gap-4 pt-4">
-                  <Button type="submit" className="flex-1">Save</Button>
-                  <Button type="button" variant="outline" className="flex-1" onClick={() => router.push("/profile")}>
-                    Cancel
-                  </Button>
-                </div>
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <Button type="submit" className="w-full sm:flex-1">Save</Button>
+                    <Button type="button" variant="outline" className="w-full sm:flex-1" onClick={() => router.push("/profile")}> 
+                      Cancel
+                    </Button>
+                  </div>
               </FieldGroup>
             </form>
           </CardContent>

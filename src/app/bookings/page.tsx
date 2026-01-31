@@ -41,7 +41,7 @@ export default function BookingsPage() {
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-background px-6 py-16">
+    <div className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl space-y-6">
         <h1 className="text-3xl font-bold">Bookings</h1>
         {/* Debug: Show current user and role */}
@@ -64,43 +64,43 @@ export default function BookingsPage() {
               const canDelete = user?.role === "ADMIN";
               // Student can review completed bookings if not already reviewed
               const canReview = user?.role === "STUDENT" && booking.status === "completed" && !booking.reviewedByStudent;
-              return (
-                <Card key={booking.id}>
-                  <CardHeader>
-                    <CardTitle>
-                      Booking with {otherParty}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-col gap-2">
-                      <div>
-                        <span className="font-medium">Status:</span> {booking.status}
-                      </div>
-                      <div>
-                        <span className="font-medium">Start:</span> {new Date(booking.startTime).toLocaleString()}
-                      </div>
-                      <div>
-                        <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
-                      </div>
-                      <div className="flex gap-2">
-                        <a href={`/bookings/${booking.id}`}>
-                          <Button size="sm" variant="outline">View Details</Button>
-                        </a>
-                        {canReview && (
-                          <a href={`/reviews/create?tutorId=${booking.tutorId}`}>
-                            <Button size="sm" variant="default">Give Review</Button>
+                return (
+                  <Card key={booking.id}>
+                    <CardHeader>
+                      <CardTitle>Booking with {otherParty}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                        <div className="md:col-span-2 flex flex-col gap-2">
+                          <div>
+                            <span className="font-medium">Status:</span> {booking.status}
+                          </div>
+                          <div>
+                            <span className="font-medium">Start:</span> {new Date(booking.startTime).toLocaleString()}
+                          </div>
+                          <div>
+                            <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="md:col-span-1 flex flex-col gap-2 items-stretch">
+                          <a href={`/bookings/${booking.id}`}>
+                            <Button size="sm" variant="outline" className="w-full md:w-auto">View Details</Button>
                           </a>
-                        )}
+                          {canReview && (
+                            <a href={`/reviews/create?tutorId=${booking.tutorId}`}>
+                              <Button size="sm" variant="default" className="w-full md:w-auto">Give Review</Button>
+                            </a>
+                          )}
+                          {canDelete && (
+                            <Button size="sm" variant="destructive" onClick={() => handleDelete(booking.id)} className="w-full md:w-auto">
+                              Delete
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                      {canDelete && (
-                        <Button size="sm" variant="destructive" onClick={() => handleDelete(booking.id)}>
-                          Delete
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
+                    </CardContent>
+                  </Card>
+                );
             })
           )}
         </div>

@@ -30,11 +30,11 @@ export default function TutorDetailsPage() {
     : "N/A";
 
   return (
-    <div className="min-h-screen bg-background px-6 py-16">
+    <div className="min-h-screen bg-background px-4 sm:px-6 py-16">
       <div className="mx-auto max-w-4xl space-y-6">
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
           <button
-            className="px-4 py-2 rounded bg-muted hover:bg-muted/70 border border-border text-base"
+            className="w-full sm:w-auto px-4 py-2 rounded bg-muted hover:bg-muted/70 border border-border text-base text-center"
             onClick={() => window.history.back()}
           >
             Back
@@ -42,14 +42,14 @@ export default function TutorDetailsPage() {
           {user?.role === "STUDENT" && (
             <a
               href={`/bookings/create?tutorId=${params.id}`}
-              className="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90 border border-primary text-base"
+              className="w-full sm:w-auto px-4 py-2 rounded bg-primary text-white hover:bg-primary/90 border border-primary text-base text-center"
             >
               Create Booking
             </a>
           )}
           {!user && (
             <span
-              className="ml-4 text-base font-bold text-white bg-red-600 border-2 border-red-800 px-4 py-2 rounded shadow-lg animate-pulse"
+              className="w-full sm:w-auto mt-2 sm:mt-0 text-base font-bold text-white bg-red-600 border-2 border-red-800 px-4 py-2 rounded shadow-lg animate-pulse text-center"
               style={{ letterSpacing: '0.05em' }}
             >
               ⚠️ Please <a href='/login' className="underline text-yellow-200 hover:text-white">login</a> to create a new booking!
@@ -109,30 +109,36 @@ export default function TutorDetailsPage() {
                       return (
                         <Card key={review.id} className="bg-muted">
                           <CardContent className="py-4">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-semibold">{review.student?.name || "Student"}</span>
-                              <span className="text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
-                              <span className="text-xs text-muted-foreground ml-2">{new Date(review.createdAt).toLocaleDateString()}</span>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-1">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold">{review.student?.name || "Student"}</span>
+                                  <span className="text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+                                  <span className="text-xs text-muted-foreground ml-2">{new Date(review.createdAt).toLocaleDateString()}</span>
+                                </div>
+                              </div>
                               {canDelete && (
-                                <button
-                                  className="ml-4 px-2 py-1 rounded bg-destructive text-white text-xs hover:bg-destructive/80"
-                                  onClick={async () => {
-                                    if (!confirm("Are you sure you want to delete this review?")) return;
-                                    try {
-                                      await deleteReview(review.id);
-                                      toast.success("Review deleted");
-                                      // Remove review from UI
-                                      setTutor((prev: any) => ({
-                                        ...prev,
-                                        reviews: prev.reviews.filter((r: any) => r.id !== review.id),
-                                      }));
-                                    } catch (e: any) {
-                                      toast.error(e.message || "Failed to delete review");
-                                    }
-                                  }}
-                                >
-                                  Delete
-                                </button>
+                                <div className="w-full sm:w-auto">
+                                  <button
+                                    className="mt-2 sm:mt-0 ml-0 sm:ml-4 px-2 py-1 rounded bg-destructive text-white text-xs hover:bg-destructive/80 w-full sm:w-auto"
+                                    onClick={async () => {
+                                      if (!confirm("Are you sure you want to delete this review?")) return;
+                                      try {
+                                        await deleteReview(review.id);
+                                        toast.success("Review deleted");
+                                        // Remove review from UI
+                                        setTutor((prev: any) => ({
+                                          ...prev,
+                                          reviews: prev.reviews.filter((r: any) => r.id !== review.id),
+                                        }));
+                                      } catch (e: any) {
+                                        toast.error(e.message || "Failed to delete review");
+                                      }
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
                               )}
                             </div>
                             <div className="text-base">{review.comment || <span className="text-muted-foreground">No comment</span>}</div>

@@ -51,21 +51,27 @@ export default function ReviewEntryPage() {
           {reviews.map((review) => (
             <Card key={review.id} className="bg-muted">
               <CardContent className="py-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold">{review.student?.name || "Student"}</span>
-                  <span className="text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
-                  <span className="text-xs text-muted-foreground ml-2">{new Date(review.createdAt).toLocaleDateString()}</span>
-                  <span className="ml-4 text-sm text-muted-foreground">Tutor: {review.tutor?.user?.name || "Tutor"}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">{review.student?.name || "Student"}</span>
+                    <span className="text-yellow-500 text-sm">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+                  </div>
+
+                  <div className="mt-1 sm:mt-0 sm:ml-4 text-xs text-muted-foreground">{new Date(review.createdAt).toLocaleDateString()}</div>
+
+                  <div className="mt-1 sm:mt-0 sm:ml-4 text-sm text-muted-foreground">Tutor: {review.tutor?.user?.name || "Tutor"}</div>
+
                   {user?.role === "ADMIN" && (
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="ml-auto"
-                      disabled={deleting === review.id}
-                      onClick={() => handleDelete(review.id)}
-                    >
-                      {deleting === review.id ? "Deleting..." : "Delete"}
-                    </Button>
+                    <div className="mt-2 sm:mt-0 sm:ml-auto">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={deleting === review.id}
+                        onClick={() => handleDelete(review.id)}
+                      >
+                        {deleting === review.id ? "Deleting..." : "Delete"}
+                      </Button>
+                    </div>
                   )}
                 </div>
                 <div className="text-base">{review.comment || <span className="text-muted-foreground">No comment</span>}</div>

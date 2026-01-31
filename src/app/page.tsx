@@ -14,15 +14,15 @@ export default function HomePage() {
         <p className="text-xl sm:text-2xl text-white/90 max-w-2xl mx-auto mb-8">
           SkillBridge connects students with expert tutors for personalized, effective, and flexible learning experiences.
         </p>
-        <div className="flex gap-6 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
           <Link href="/register">
-            <Button size="lg" className="text-lg px-8 py-4 shadow-xl">Get Started</Button>
+            <Button size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-xl w-full sm:w-auto">Get Started</Button>
           </Link>
           <Link href="/login">
             <Button
               variant="outline"
               size="lg"
-              className="text-lg px-8 py-4 border-2 border-white text-white bg-black/40 hover:bg-white hover:text-black hover:border-white transition-colors duration-200 shadow-xl font-semibold"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white bg-black/40 hover:bg-white hover:text-black hover:border-white transition-colors duration-200 shadow-xl font-semibold w-full sm:w-auto"
               style={{ boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)' }}
             >
               Sign In

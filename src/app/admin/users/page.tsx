@@ -62,12 +62,12 @@ export default function AdminUsers() {
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-background px-6 py-16">
+    <div className="min-h-screen bg-background px-4 sm:px-6 py-16">
       <div className="mx-auto max-w-6xl space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <h1 className="text-3xl font-bold">Manage Users</h1>
           <Link href="/admin/dashboard">
-            <Button variant="outline">Back to Dashboard</Button>
+            <Button variant="outline" className="w-full sm:w-auto">Back to Dashboard</Button>
           </Link>
         </div>
 
@@ -98,11 +98,12 @@ export default function AdminUsers() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     {user.status !== "BANNED" ? (
                       <Button
                         size="sm"
                         variant="destructive"
+                        className="w-full sm:w-auto"
                         onClick={() => updateStatus(user.id, "BANNED")}
                       >
                         Ban User
@@ -111,6 +112,7 @@ export default function AdminUsers() {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="w-full sm:w-auto"
                         onClick={() => updateStatus(user.id, "ACTIVE")}
                       >
                         Unban User
@@ -121,6 +123,7 @@ export default function AdminUsers() {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="w-full sm:w-auto"
                         onClick={() => updateRole(user.id, "TUTOR")}
                       >
                         Make Tutor
@@ -131,6 +134,7 @@ export default function AdminUsers() {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="w-full sm:w-auto"
                         onClick={() => updateRole(user.id, "STUDENT")}
                       >
                         Make Student

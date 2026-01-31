@@ -25,12 +25,12 @@ export default function AdminDashboard() {
   if (!stats) return <div className="flex min-h-screen items-center justify-center">No data</div>;
 
   return (
-    <div className="min-h-screen bg-background px-6 py-16">
+    <div className="min-h-screen bg-background px-4 sm:px-6 py-16">
       <div className="mx-auto max-w-6xl space-y-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <Link href="/admin/users">
-            <Button>Manage Users</Button>
+            <Button className="w-full sm:w-auto">Manage Users</Button>
           </Link>
         </div>
 

@@ -50,18 +50,19 @@ export function Sidebar() {
       </button>
     );
   }
-
   return (
-    <aside className="w-64 min-h-screen bg-muted border-r px-4 py-8 flex flex-col gap-4 sticky top-0">
+    <aside className="hidden md:flex w-28 sm:w-48 md:w-56 min-h-screen bg-muted border-r px-3 py-4 sm:py-8 flex-col gap-4 sticky top-0">
       <div className="flex items-center justify-between mb-6">
-        <span className="font-bold text-xl">SkillBridge</span>
+        <span className="font-bold text-sm sm:text-lg">SkillBridge</span>
         <Button size="sm" variant="ghost" onClick={() => setVisible(false)} title="Hide Sidebar">×</Button>
       </div>
-      {links.map((link) => (
-        <Link key={link.href} href={link.href} className="block py-2 px-3 rounded hover:bg-primary/10">
-          {link.label}
-        </Link>
-      ))}
+      <nav className="flex flex-col gap-1">
+        {links.map((link) => (
+          <Link key={link.href} href={link.href} className="block py-2 px-2 rounded hover:bg-primary/10">
+            <span className="text-xs sm:text-sm truncate max-w-[9rem]">{link.label}</span>
+          </Link>
+        ))}
+      </nav>
     </aside>
   );
 }
