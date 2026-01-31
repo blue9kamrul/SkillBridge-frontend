@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getAllReviews, deleteReview } from "@/lib/review-api";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -12,7 +12,7 @@ export default function ReviewEntryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
-  const { user, loading: userLoading } = useCurrentUser();
+  const { user } = useUser();
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
     setDeleting(id);
@@ -37,7 +37,7 @@ export default function ReviewEntryPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading || userLoading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
   if (error) return <div className="text-red-500 text-center">Error: {error}</div>;
 
   return (

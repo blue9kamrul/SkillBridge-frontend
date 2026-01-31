@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user, loading: userLoading } = useCurrentUser();
+  const { user } = useUser();
   const router = useRouter();
 
   const loadCategories = () => {
@@ -39,7 +39,7 @@ export default function CategoriesPage() {
     }
   };
 
-  if (loading || userLoading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
   if (error) return <div className="text-red-500 text-center">Error: {error}</div>;
 
   return (

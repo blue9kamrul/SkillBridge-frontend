@@ -15,9 +15,14 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/me", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
+    fetch("http://localhost:5000/api/user/me", { credentials: "include" })
+      .then(async (res) => {
+        if (res.status === 401) {
+          setProfile(null);
+          router.push("/login");
+          return;
+        }
+        const data = await res.json();
         if (data.success) {
           setProfile(data.data);
         } else {

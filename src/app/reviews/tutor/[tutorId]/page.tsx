@@ -3,13 +3,13 @@ import { getReviewsByTutorId, deleteReview } from "@/lib/review-api";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 
 export default function TutorReviewsPage({ params }: { params: { tutorId: string } }) {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user, loading: userLoading } = useCurrentUser();
+  const { user } = useUser();
 
   const loadReviews = () => {
     setLoading(true);
@@ -36,7 +36,7 @@ export default function TutorReviewsPage({ params }: { params: { tutorId: string
     }
   };
 
-  if (loading || userLoading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
   if (error) return <div className="text-red-500 text-center">Error: {error}</div>;
 
   return (

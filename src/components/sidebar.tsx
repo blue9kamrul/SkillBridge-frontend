@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export function Sidebar() {
-  const { user, loading } = useCurrentUser();
+  const { user } = useUser();
   const [visible, setVisible] = useState(true);
 
   let links = [
@@ -13,7 +13,7 @@ export function Sidebar() {
     { href: "/profile", label: "Profile" },
   ];
 
-  if (!loading && user) {
+  if (user) {
     if (user.role === "ADMIN") {
       links = [
         { href: "/admin/dashboard", label: "Admin Dashboard" },

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 
@@ -33,12 +33,11 @@ const navConfig = {
 };
 
 export function Navbar() {
-  const { user, loading } = useCurrentUser();
+  const { user } = useUser();
   const pathname = usePathname();
 
-
   let links = [...navConfig.common];
-  if (!loading && user) {
+  if (user) {
     if (user.role === "ADMIN") links = [...links, ...navConfig.admin];
     else if (user.role === "TUTOR") links = [...links, ...navConfig.tutor];
     else if (user.role === "STUDENT") links = [...links, ...navConfig.student];
@@ -58,12 +57,8 @@ export function Navbar() {
             </Button>
           </Link>
         ))}
-        {user ? (
+        {user && (
           <span className="ml-4 text-xs text-muted-foreground">{user.name} ({user.role})</span>
-        ) : (
-          <Link href="/auth/login">
-            <Button size="sm" variant="outline">Login</Button>
-          </Link>
         )}
       </div>
     </nav>

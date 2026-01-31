@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useUser } from "@/lib/user-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
-import { useCurrentUser } from "@/lib/use-current-user";
-import { deleteReview } from "@/lib/review-api";
-
 export default function TutorDetailsPage() {
-  const { user, loading: userLoading } = useCurrentUser();
+  const { user } = useUser();
   const params = useParams();
   const [tutor, setTutor] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -24,7 +22,7 @@ export default function TutorDetailsPage() {
       .finally(() => setLoading(false));
   }, [params.id]);
 
-  if (loading || userLoading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   if (!tutor) return <div className="flex min-h-screen items-center justify-center">Tutor not found</div>;
 
   const avgRating = tutor.reviews?.length
@@ -48,6 +46,14 @@ export default function TutorDetailsPage() {
             >
               Create Booking
             </a>
+          )}
+          {!user && (
+            <span
+              className="ml-4 text-base font-bold text-white bg-red-600 border-2 border-red-800 px-4 py-2 rounded shadow-lg animate-pulse"
+              style={{ letterSpacing: '0.05em' }}
+            >
+              ⚠️ Please <a href='/login' className="underline text-yellow-200 hover:text-white">login</a> to create a new booking!
+            </span>
           )}
         </div>
         <Card>

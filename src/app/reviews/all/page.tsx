@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import { getAllReviews } from "@/lib/review-api";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 
 export default function AllReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user, loading: userLoading } = useCurrentUser();
+  const { user } = useUser();
 
   useEffect(() => {
     getAllReviews()
@@ -21,7 +21,7 @@ export default function AllReviewsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading || userLoading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[200px]">Loading...</div>;
   if (error) return <div className="text-red-500 text-center">Error: {error}</div>;
 
   return (

@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useCurrentUser } from "@/lib/use-current-user";
+import { useUser } from "@/lib/user-context";
 
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user, loading: userLoading } = useCurrentUser();
+  const { user } = useUser();
 
   useEffect(() => {
     fetch("http://localhost:5000/api/bookings", { credentials: "include" })
@@ -38,7 +38,7 @@ export default function BookingsPage() {
     }
   };
 
-  if (loading || userLoading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-background px-6 py-16">

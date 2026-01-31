@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
+
 import { Navbar } from "@/components/navbar";
+import Footer from "@/components/footer";
+import { UserProvider } from "@/lib/user-context";
 
 export const metadata: Metadata = {
   title: "SkillBridge",
@@ -16,8 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
+        <UserProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </UserProvider>
         <Toaster richColors position="top-right" />
       </body>
     </html>
