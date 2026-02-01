@@ -66,6 +66,13 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
           const url = base.endsWith("/api") ? `${base}/user/me` : `${base}/api/user/me`;
           const userRes = await fetch(url, { credentials: "include" });
+          if (userRes.status === 403) {
+            // User is banned
+            const userData = await userRes.json();
+            toast.error(userData.message || "Your account has been banned", { id: toastId });
+            await authClient.signOut({ fetchOptions: { credentials: 'include' } });
+            return;
+          }
           if (userRes.ok) {
             const userData = await userRes.json();
             setUser(userData.data);

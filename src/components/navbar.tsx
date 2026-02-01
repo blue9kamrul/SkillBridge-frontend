@@ -76,12 +76,12 @@ export function Navbar() {
               <LoadingButton size="sm" variant="ghost" onClick={async () => {
                 try {
                   await authClient.signOut({ fetchOptions: { credentials: 'include' } });
-                  setUser(null);
-                  router.push('/');
                 } catch (e: any) {
-                  // show toast if available
-                  console.error(e);
+                  console.error('Sign out error:', e);
                 }
+                // Clear user state regardless of backend response
+                setUser(null);
+                router.push('/');
               }}>
                 Logout
               </LoadingButton>
@@ -145,12 +145,13 @@ function MobileMenu({ uniqueLinks, pathname, user }: any) {
                     onClick={async () => {
                       try {
                         await authClient.signOut({ fetchOptions: { credentials: 'include' } });
-                        setUser(null);
-                        setOpen(false);
-                        router.push('/');
                       } catch (e) {
-                        console.error(e);
+                        console.error('Sign out error:', e);
                       }
+                      // Clear user state regardless of backend response
+                      setUser(null);
+                      setOpen(false);
+                      router.push('/');
                     }}
                   >
                     Logout

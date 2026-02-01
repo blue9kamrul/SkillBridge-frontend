@@ -21,9 +21,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       ? `${base}/user/me`
       : `${base}/api/user/me`;
     fetch(url, { credentials: "include" })
-      .then((res) => (res.ok ? res.json() : Promise.reject("Not authenticated")))
+      .then(async (res) => {
+        if (res.status === 403) {
+          // User is banned
+          const data = await res.json();
+          alert(data.message || "Your account has been banned");
+          setUser(null);
+          return Promise.reject("Banned");
+        }
+        return res.ok ? res.json() : Promise.reject("Not authenticated");
+      })
       .then((data) => setUser(data.data))
-      .catch(() => setUser(null));
+      .catch((err) => {
+        if (err !== "Banned") {
+          setUser(null);
+        }
+      });
   }, []);
 
   return (
