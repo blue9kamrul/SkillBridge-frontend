@@ -11,7 +11,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/admin/dashboard", { credentials: "include" })
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    fetch(`${apiUrl}/api/admin/dashboard`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setStats(data.data);

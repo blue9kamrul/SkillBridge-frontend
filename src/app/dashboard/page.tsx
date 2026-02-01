@@ -15,7 +15,8 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/user/me", { credentials: "include" })
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    fetch(`${apiUrl}/api/user/me`, { credentials: "include" })
       .then(async (res) => {
         if (res.status === 401) {
           setProfile(null);
