@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,9 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [bio, setBio] = useState("");
+  const [subjects, setSubjects] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -25,12 +29,45 @@ export default function DashboardPage() {
         const data = await res.json();
         if (data.success) {
           setProfile(data.data);
+          if (data.data.tutorProfile) {
+            setBio(data.data.tutorProfile.bio || "");
+            setSubjects(Array.isArray(data.data.tutorProfile.subjects) ? data.data.tutorProfile.subjects.join(", ") : data.data.tutorProfile.subjects);
+          }
         } else {
           toast.error("Failed to load dashboard");
         }
         setLoading(false);
       });
   }, [router]);
+
+  const handleUpdateTutorProfile = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = apiUrl.endsWith("/api") ? `${apiUrl}/tutors/profile` : `${apiUrl}/api/tutors/profile`;
+    
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        bio,
+        subjects: subjects.split(",").map((s) => s.trim()),
+      }),
+    });
+    
+    const data = await res.json();
+    if (data.success) {
+      toast.success("Profile updated successfully");
+      setEditing(false);
+      // Refresh profile
+      const refreshRes = await fetch(`${apiUrl}/api/user/me`, { credentials: "include" });
+      const refreshData = await refreshRes.json();
+      if (refreshData.success) {
+        setProfile(refreshData.data);
+      }
+    } else {
+      toast.error(data.message || "Failed to update profile");
+    }
+  };
 
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
@@ -49,7 +86,12 @@ export default function DashboardPage() {
           {profile && (
             <Card>
               <CardHeader>
-                <CardTitle>Profile</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Profile</CardTitle>
+                  {profile.role === "TUTOR" && !editing && (
+                    <Button size="sm" onClick={() => setEditing(true)}>Edit Profile</Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -71,14 +113,44 @@ export default function DashboardPage() {
                   </div>
                   {profile.role === "TUTOR" && profile.tutorProfile && (
                     <>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Subjects</p>
-                        <p className="font-medium">{Array.isArray(profile.tutorProfile.subjects) ? profile.tutorProfile.subjects.join(", ") : profile.tutorProfile.subjects}</p>
+                      <div className="sm:col-span-2">
+                        <p className="text-sm text-muted-foreground mb-2">Bio</p>
+                        {editing ? (
+                          <textarea
+                            value={bio}
+                            onChange={(e) => setBio(e.target.value)}
+                            className="w-full rounded-md border px-3 py-2"
+                            rows={3}
+                          />
+                        ) : (
+                          <p className="font-medium">{profile.tutorProfile.bio}</p>
+                        )}
                       </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Bio</p>
-                        <p className="font-medium">{profile.tutorProfile.bio}</p>
+                      <div className="sm:col-span-2">
+                        <p className="text-sm text-muted-foreground mb-2">Subjects</p>
+                        {editing ? (
+                          <>
+                            <Input
+                              value={subjects}
+                              onChange={(e) => setSubjects(e.target.value)}
+                              placeholder="Math, Physics, Chemistry"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">Separate subjects with commas</p>
+                          </>
+                        ) : (
+                          <p className="font-medium">{Array.isArray(profile.tutorProfile.subjects) ? profile.tutorProfile.subjects.join(", ") : profile.tutorProfile.subjects}</p>
+                        )}
                       </div>
+                      {editing && (
+                        <div className="sm:col-span-2 flex gap-2">
+                          <Button onClick={handleUpdateTutorProfile}>Save Changes</Button>
+                          <Button variant="outline" onClick={() => {
+                            setEditing(false);
+                            setBio(profile.tutorProfile.bio || "");
+                            setSubjects(Array.isArray(profile.tutorProfile.subjects) ? profile.tutorProfile.subjects.join(", ") : profile.tutorProfile.subjects);
+                          }}>Cancel</Button>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
