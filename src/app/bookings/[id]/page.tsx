@@ -17,7 +17,9 @@ export default function BookingDetailsPage() {
   const fetchBooking = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${params.id}`, { credentials: "include" });
+      const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const url = base.endsWith("/api") ? `${base}/bookings/${params.id}` : `${base}/api/bookings/${params.id}`;
+      const res = await fetch(url, { credentials: "include" });
       const data = await res.json();
       if (data.success) {
         setBooking(data.data);
@@ -38,7 +40,9 @@ export default function BookingDetailsPage() {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this booking?")) return;
-    const res = await fetch(`http://localhost:5000/api/bookings/${params.id}`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/bookings/${params.id}` : `${base}/api/bookings/${params.id}`;
+    const res = await fetch(url, {
       method: "DELETE",
       credentials: "include",
     });
@@ -58,7 +62,9 @@ export default function BookingDetailsPage() {
   const handleComplete = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setUpdating(true);
-    const res = await fetch(`http://localhost:5000/api/bookings/${params.id}/status`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/bookings/${params.id}/status` : `${base}/api/bookings/${params.id}/status`;
+    const res = await fetch(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -77,7 +83,9 @@ export default function BookingDetailsPage() {
   const handleCancel = async () => {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
     setUpdating(true);
-    const res = await fetch(`http://localhost:5000/api/bookings/${params.id}/status`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/bookings/${params.id}/status` : `${base}/api/bookings/${params.id}/status`;
+    const res = await fetch(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

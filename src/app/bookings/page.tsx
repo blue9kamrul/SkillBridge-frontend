@@ -13,7 +13,9 @@ export default function BookingsPage() {
   const { user } = useUser();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/bookings", { credentials: "include" })
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/bookings` : `${base}/api/bookings`;
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setBookings(data.data);
@@ -25,7 +27,9 @@ export default function BookingsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this booking?")) return;
-    const res = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/bookings/${id}` : `${base}/api/bookings/${id}`;
+    const res = await fetch(url, {
       method: "DELETE",
       credentials: "include",
     });

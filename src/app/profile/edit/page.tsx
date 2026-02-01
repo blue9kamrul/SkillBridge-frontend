@@ -16,7 +16,9 @@ export default function EditProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/students/profile", { credentials: "include" })
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/students/profile` : `${base}/api/students/profile`;
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -42,7 +44,9 @@ export default function EditProfilePage() {
     }
 
     try {
-      const data = await apiFetch("http://localhost:5000/api/students/profile", {
+      const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const url = base.endsWith("/api") ? `${base}/students/profile` : `${base}/api/students/profile`;
+      const data = await apiFetch(url, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

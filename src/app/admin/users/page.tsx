@@ -16,7 +16,9 @@ export default function AdminUsers() {
   }, []);
 
   const loadUsers = () => {
-    fetch("http://localhost:5000/api/admin/users", { credentials: "include" })
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/admin/users` : `${base}/api/admin/users`;
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setUsers(data.data);
@@ -27,7 +29,9 @@ export default function AdminUsers() {
   };
 
   const updateStatus = async (userId: string, status: string) => {
-    const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/ban-status`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/admin/users/${userId}/ban-status` : `${base}/api/admin/users/${userId}/ban-status`;
+    const response = await fetch(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -44,7 +48,9 @@ export default function AdminUsers() {
   };
 
   const updateRole = async (userId: string, role: string) => {
-    const response = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/admin/users/${userId}` : `${base}/api/admin/users/${userId}`;
+    const response = await fetch(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

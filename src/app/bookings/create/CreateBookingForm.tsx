@@ -20,7 +20,9 @@ export default function CreateBookingForm({ tutorIdFromQuery }: { tutorIdFromQue
       startTime: formData.get("startTime"),
       endTime: formData.get("endTime"),
     };
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/bookings`, {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/bookings` : `${base}/api/bookings`;
+    const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
