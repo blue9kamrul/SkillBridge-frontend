@@ -75,7 +75,7 @@ export default function BookingDetailsPage() {
       toast.success("Status updated");
       await fetchBooking();
     } else {
-      toast.error("Failed to update status");
+      toast.error(data.message || "Failed to update status");
     }
     setUpdating(false);
   };
@@ -96,7 +96,7 @@ export default function BookingDetailsPage() {
       toast.success("Booking cancelled");
       await fetchBooking();
     } else {
-      toast.error("Failed to cancel booking");
+      toast.error(data.message || "Failed to cancel booking");
     }
     setUpdating(false);
   };

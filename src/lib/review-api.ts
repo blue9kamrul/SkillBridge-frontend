@@ -28,8 +28,11 @@ export async function createReview(data: {
     credentials: "include",
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error("Failed to create review");
-  return res.json();
+  const result = await res.json();
+  if (!res.ok) {
+    throw new Error(result.message || "Failed to create review");
+  }
+  return result;
 }
 
 export async function deleteReview(id: string) {
