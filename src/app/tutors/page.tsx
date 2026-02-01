@@ -10,7 +10,9 @@ export default function TutorsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/tutors", { credentials: "include" })
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = base.endsWith("/api") ? `${base}/tutors` : `${base}/api/tutors`;
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setTutors(data.data);
