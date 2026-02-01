@@ -21,9 +21,11 @@ import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useUser } from "@/lib/user-context";
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
+  const { setUser } = useUser();
 
   const handleGoogleLogin = async () => {
     try {
@@ -57,6 +59,19 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         // Store token in localStorage if present
         if (data && data.token) {
           localStorage.setItem("token", data.token);
+        }
+
+        // Fetch user data and update context immediately
+        try {
+          const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+          const url = base.endsWith("/api") ? `${base}/user/me` : `${base}/api/user/me`;
+          const userRes = await fetch(url, { credentials: "include" });
+          if (userRes.ok) {
+            const userData = await userRes.json();
+            setUser(userData.data);
+          }
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
         }
 
         toast.success("Signed in successfully!", { id: toastId });

@@ -1,6 +1,7 @@
 import CreateBookingForm from "./CreateBookingForm";
 
-export default function CreateBookingPage({ searchParams }: { searchParams?: { tutorId?: string } }) {
-  const tutorIdFromQuery = searchParams?.tutorId || "";
+export default async function CreateBookingPage({ searchParams }: { searchParams: Promise<{ tutorId?: string }> }) {
+  const params = await searchParams;
+  const tutorIdFromQuery = params?.tutorId || "";
   return <CreateBookingForm tutorIdFromQuery={tutorIdFromQuery} />;
 }

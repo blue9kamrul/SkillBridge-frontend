@@ -1,6 +1,7 @@
 import CreateReviewForm from "./CreateReviewForm";
 
-export default function CreateReviewPage({ searchParams }: { searchParams?: { tutorId?: string } }) {
-  const tutorId = searchParams?.tutorId || "";
+export default async function CreateReviewPage({ searchParams }: { searchParams: Promise<{ tutorId?: string }> }) {
+  const params = await searchParams;
+  const tutorId = params?.tutorId || "";
   return <CreateReviewForm tutorId={tutorId} />;
 }
