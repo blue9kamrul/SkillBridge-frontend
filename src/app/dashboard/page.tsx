@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sidebar } from "@/components/sidebar";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,9 +35,8 @@ export default function DashboardPage() {
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <main className="flex-1 px-6 py-16">
+    <div className="min-h-screen bg-background">
+      <main className="px-6 py-16">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="flex items-center justify-between">
             <Button variant="outline" onClick={() => window.history.back()} className="mr-4">Back</Button>

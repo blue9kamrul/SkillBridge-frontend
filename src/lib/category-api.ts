@@ -1,8 +1,8 @@
 // src/lib/category-api.ts
 // Simple API functions for category routes
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5000/api";
+const rawBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE = rawBase.endsWith("/api") ? rawBase : `${rawBase}/api`;
 
 export async function getAllCategories() {
   const res = await fetch(`${API_BASE}/categories`, {

@@ -41,42 +41,64 @@ export default function BecomeTutorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-6 py-16">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-6 py-16">
       <div className="mx-auto max-w-2xl">
-        <Card>
-          <CardHeader>
-            <CardTitle>Become a Tutor</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-900">Become a Tutor</h1>
+          <p className="mt-2 text-gray-600">Share your expertise and help students succeed</p>
+        </div>
+        
+        <Card className="shadow-lg">
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="text-sm font-medium">Bio</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Bio</label>
                 <textarea
                   name="bio"
                   required
-                  className="mt-1 w-full rounded-md border px-3 py-2"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   rows={4}
+                  placeholder="Tell students about your teaching experience..."
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium">Subjects (comma separated)</label>
-                <Input name="subjects" required placeholder="Math, Physics, Chemistry" />
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Subjects</label>
+                <Input 
+                  name="subjects" 
+                  required 
+                  placeholder="Math, Physics, Chemistry" 
+                  className="h-11"
+                />
+                <p className="mt-1 text-xs text-gray-500">Separate subjects with commas</p>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-6 sm:grid-cols-2">
                 <div>
-                  <label className="text-sm font-medium">Hourly Rate ($)</label>
-                  <Input name="hourlyRate" type="number" step="0.01" required />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Hourly Rate ($)</label>
+                  <Input 
+                    name="hourlyRate" 
+                    type="number" 
+                    step="0.01" 
+                    required 
+                    placeholder="25.00"
+                    className="h-11"
+                  />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Experience (years)</label>
-                  <Input name="experience" type="number" required />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Experience (years)</label>
+                  <Input 
+                    name="experience" 
+                    type="number" 
+                    required 
+                    placeholder="5"
+                    className="h-11"
+                  />
                 </div>
               </div>
 
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? "Creating..." : "Create Profile"}
+              <Button type="submit" disabled={loading} className="w-full h-11 text-base font-semibold">
+                {loading ? "Creating Profile..." : "Create Tutor Profile"}
               </Button>
             </form>
           </CardContent>
