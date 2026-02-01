@@ -33,7 +33,7 @@ export default function BecomeTutorPage() {
 
     if (result.success) {
       toast.success("Tutor profile created!");
-      router.push("/tutor/profile");
+      router.push("/");
     } else {
       toast.error(result.message || "Failed to create profile");
     }
