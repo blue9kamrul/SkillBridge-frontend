@@ -136,13 +136,16 @@ export default function TutorDetailsPage() {
               </div>
 
               <div>
-                <p className="text-sm text-muted-foreground">Subjects</p>
+                <p className="text-sm text-muted-foreground">Categories</p>
                 <div className="mt-1 flex flex-wrap gap-2">
-                  {tutor.subjects?.map((subject: string) => (
-                    <span key={subject} className="rounded-full bg-primary/10 px-3 py-1 text-sm">
-                      {subject}
+                  {tutor.categories?.map((category: any) => (
+                    <span key={category.id} className="rounded-full bg-primary/10 px-3 py-1 text-sm">
+                      {category.name}
                     </span>
                   ))}
+                  {(!tutor.categories || tutor.categories.length === 0) && (
+                    <span className="text-sm text-muted-foreground">No categories selected</span>
+                  )}
                 </div>
               </div>
 
