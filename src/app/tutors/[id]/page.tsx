@@ -5,6 +5,8 @@ import { useUser } from "@/lib/user-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api-url";
+
 export default function TutorDetailsPage() {
   const { user } = useUser();
   const params = useParams();
@@ -13,7 +15,7 @@ export default function TutorDetailsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const tutorUrl = base.endsWith("/api") ? `${base}/tutors/${params.id}` : `${base}/api/tutors/${params.id}`;
     
     // Fetch tutor details

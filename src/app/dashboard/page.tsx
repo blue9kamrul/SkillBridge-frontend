@@ -91,8 +91,13 @@ export default function DashboardPage() {
       const refreshData = await refreshRes.json();
       if (refreshData.success) {
         setProfile(refreshData.data);
-        if (refreshData.data.tutorProfile?.categories) {
-          setSelectedCategoryIds(refreshData.data.tutorProfile.categories.map((c: any) => c.id));
+        // Update all state with refreshed data
+        if (refreshData.data.tutorProfile) {
+          setBio(refreshData.data.tutorProfile.bio || "");
+          setAvailability(refreshData.data.tutorProfile.availability || "");
+          if (refreshData.data.tutorProfile.categories) {
+            setSelectedCategoryIds(refreshData.data.tutorProfile.categories.map((c: any) => c.id));
+          }
         }
       }
     } else {

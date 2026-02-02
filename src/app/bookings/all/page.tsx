@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUser } from "@/lib/user-context";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 export default function AllBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -12,7 +13,7 @@ export default function AllBookingsPage() {
   const { user } = useUser();
 
   const fetchBookings = () => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/bookings` : `${base}/api/bookings`;
     fetch(url, { credentials: "include" })
       .then((res) => res.json())
@@ -31,7 +32,7 @@ export default function AllBookingsPage() {
   const handleCancel = async (bookingId: string) => {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
     setCancelling(bookingId);
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/bookings/${bookingId}/status` : `${base}/api/bookings/${bookingId}/status`;
     
     const res = await fetch(url, {

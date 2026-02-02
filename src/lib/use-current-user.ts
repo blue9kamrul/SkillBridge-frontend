@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { getApiBaseUrl } from "./api-url";
 
 export function useCurrentUser() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api")
       ? `${base}/auth/me`
       : `${base}/api/auth/me`;

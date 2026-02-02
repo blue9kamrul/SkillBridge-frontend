@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function EditProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/students/profile` : `${base}/api/students/profile`;
     fetch(url, { credentials: "include" })
       .then((res) => res.json())
@@ -44,7 +45,7 @@ export default function EditProfilePage() {
     }
 
     try {
-      const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const base = getApiBaseUrl();
       const url = base.endsWith("/api") ? `${base}/students/profile` : `${base}/api/students/profile`;
       const data = await apiFetch(url, {
         method: "PATCH",
