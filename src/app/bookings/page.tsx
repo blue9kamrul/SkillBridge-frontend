@@ -44,25 +44,22 @@ export default function BookingsPage() {
 
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
+  const now = new Date();
+  const upcomingBookings = bookings.filter(b => new Date(b.startTime) > now);
+  const pastBookings = bookings.filter(b => new Date(b.startTime) <= now);
+
   return (
     <div className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl space-y-6">
-        <h1 className="text-3xl font-bold">Bookings</h1>
-        {/* Debug: Show current user and role */}
-        {user && (
-          <div className="mb-4 p-2 bg-gray-100 rounded text-sm text-gray-700">
-            <strong>Logged in as:</strong> {user.name || user.email} <br />
-            <strong>Role:</strong> {user.role}
-            <br />
-          </div>
-        )}
-        <div className="flex gap-4 mb-6">
-        </div>
+        <h1 className="text-3xl font-bold">My Bookings</h1>
+        
+        {/* Upcoming Bookings */}
         <div className="space-y-4">
-          {bookings.length === 0 ? (
-            <p className="text-muted-foreground">No bookings found</p>
+          <h2 className="text-2xl font-semibold text-primary">📅 Upcoming Bookings ({upcomingBookings.length})</h2>
+          {upcomingBookings.length === 0 ? (
+            <p className="text-muted-foreground">No upcoming bookings</p>
           ) : (
-            bookings.map((booking) => {
+            upcomingBookings.map((booking) => {
               const otherParty = booking.tutor?.user?.name || booking.student?.name || booking.tutor?.user?.email || booking.student?.email;
               // Admin can delete any booking
               const canDelete = user?.role === "ADMIN";
@@ -70,6 +67,57 @@ export default function BookingsPage() {
               const canReview = user?.role === "STUDENT" && booking.status === "completed" && !booking.reviewedByStudent;
                 return (
                   <Card key={booking.id}>
+                    <CardHeader>
+                      <CardTitle>Booking with {otherParty}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                        <div className="md:col-span-2 flex flex-col gap-2">
+                          <div>
+                            <span className="font-medium">Status:</span> {booking.status}
+                          </div>
+                          <div>
+                            <span className="font-medium">Start:</span> {new Date(booking.startTime).toLocaleString()}
+                          </div>
+                          <div>
+                            <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="md:col-span-1 flex flex-col gap-2 items-stretch">
+                          <a href={`/bookings/${booking.id}`}>
+                            <Button size="sm" variant="outline" className="w-full md:w-auto">View Details</Button>
+                          </a>
+                          {canReview && (
+                            <a href={`/reviews/create?tutorId=${booking.tutorId}`}>
+                              <Button size="sm" variant="default" className="w-full md:w-auto">Give Review</Button>
+                            </a>
+                          )}
+                          {canDelete && (
+                            <Button size="sm" variant="destructive" onClick={() => handleDelete(booking.id)} className="w-full md:w-auto">
+                              Delete
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+            })
+          )}
+        </div>
+
+        {/* Past Bookings */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold text-muted-foreground">📋 Past Bookings ({pastBookings.length})</h2>
+          {pastBookings.length === 0 ? (
+            <p className="text-muted-foreground">No past bookings</p>
+          ) : (
+            pastBookings.map((booking) => {
+              const otherParty = booking.tutor?.user?.name || booking.student?.name || booking.tutor?.user?.email || booking.student?.email;
+              const canDelete = user?.role === "ADMIN";
+              const canReview = user?.role === "STUDENT" && booking.status === "completed" && !booking.reviewedByStudent;
+                return (
+                  <Card key={booking.id} className="bg-muted/30">
                     <CardHeader>
                       <CardTitle>Booking with {otherParty}</CardTitle>
                     </CardHeader>

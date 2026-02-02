@@ -35,16 +35,57 @@ export default function TutorBookingsPage() {
 
   if (loading) return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
 
+  const now = new Date();
+  const upcomingBookings = bookings.filter(b => new Date(b.startTime) > now);
+  const pastBookings = bookings.filter(b => new Date(b.startTime) <= now);
+
   return (
     <div className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-4xl space-y-6">
         <h1 className="text-3xl font-bold">My Tutor Bookings</h1>
+        
+        {/* Upcoming Bookings */}
         <div className="space-y-4">
-          {bookings.length === 0 ? (
-            <p className="text-muted-foreground">No bookings found</p>
+          <h2 className="text-2xl font-semibold text-primary">📅 Upcoming Sessions ({upcomingBookings.length})</h2>
+          {upcomingBookings.length === 0 ? (
+            <p className="text-muted-foreground">No upcoming bookings</p>
           ) : (
-            bookings.map((booking) => (
+            upcomingBookings.map((booking) => (
               <Card key={booking.id}>
+                <CardHeader>
+                  <CardTitle>
+                    Booking with {booking.student?.name || booking.student?.email}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      <span className="font-medium">Status:</span> {booking.status}
+                    </div>
+                    <div>
+                      <span className="font-medium">Start:</span> {new Date(booking.startTime).toLocaleString()}
+                    </div>
+                    <div>
+                      <span className="font-medium">End:</span> {new Date(booking.endTime).toLocaleString()}
+                    </div>
+                    <a href={`/bookings/${booking.id}`}>
+                      <Button size="sm" variant="outline">View Details</Button>
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+
+        {/* Past Bookings */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold text-muted-foreground">📋 Past Sessions ({pastBookings.length})</h2>
+          {pastBookings.length === 0 ? (
+            <p className="text-muted-foreground">No past bookings</p>
+          ) : (
+            pastBookings.map((booking) => (
+              <Card key={booking.id} className="bg-muted/30">
                 <CardHeader>
                   <CardTitle>
                     Booking with {booking.student?.name || booking.student?.email}

@@ -9,16 +9,30 @@ export default function TutorDetailsPage() {
   const { user } = useUser();
   const params = useParams();
   const [tutor, setTutor] = useState<any>(null);
+  const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const url = base.endsWith("/api") ? `${base}/tutors/${params.id}` : `${base}/api/tutors/${params.id}`;
-    fetch(url, { credentials: "include" })
+    const tutorUrl = base.endsWith("/api") ? `${base}/tutors/${params.id}` : `${base}/api/tutors/${params.id}`;
+    
+    // Fetch tutor details
+    fetch(tutorUrl, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) setTutor(data.data);
-        else toast.error("Failed to load tutor");
+        if (data.success) {
+          setTutor(data.data);
+          
+          // Fetch tutor bookings
+          const bookingsUrl = base.endsWith("/api") ? `${base}/bookings/tutor/${params.id}` : `${base}/api/bookings/tutor/${params.id}`;
+          return fetch(bookingsUrl, { credentials: "include" });
+        } else {
+          toast.error("Failed to load tutor");
+        }
+      })
+      .then((res) => res?.json())
+      .then((data) => {
+        if (data?.success) setBookings(data.data || []);
       })
       .catch(() => toast.error("Failed to load tutor"))
       .finally(() => setLoading(false));
@@ -43,6 +57,16 @@ export default function TutorDetailsPage() {
   const avgRating = tutor.reviews?.length
     ? (tutor.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / tutor.reviews.length).toFixed(1)
     : "N/A";
+
+  // Calculate booking statistics
+  const now = new Date();
+  const confirmedBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'pending');
+  const upcomingBookings = confirmedBookings.filter(b => new Date(b.startTime) > now);
+  const totalBookedHours = upcomingBookings.reduce((sum, b) => {
+    const duration = (new Date(b.endTime).getTime() - new Date(b.startTime).getTime()) / (1000 * 60 * 60);
+    return sum + duration;
+  }, 0);
+  const totalBookedDays = Math.ceil(totalBookedHours / 24);
 
   return (
     <div className="min-h-screen bg-background px-4 sm:px-6 py-16">
@@ -93,6 +117,14 @@ export default function TutorDetailsPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Reviews</p>
                   <p className="text-xl font-semibold">{tutor.reviews?.length || 0}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Upcoming Bookings</p>
+                  <p className="text-xl font-semibold text-orange-600">{upcomingBookings.length} sessions</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Booked Hours</p>
+                  <p className="text-xl font-semibold text-blue-600">{totalBookedHours.toFixed(1)} hrs ({totalBookedDays} days)</p>
                 </div>
               </div>
 
