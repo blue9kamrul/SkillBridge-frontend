@@ -79,9 +79,11 @@ export function Navbar() {
                 } catch (e: any) {
                   console.error('Sign out error:', e);
                 }
-                // Clear user state regardless of backend response
+                // Clear user state and localStorage
                 setUser(null);
-                router.push('/');
+                localStorage.removeItem('token');
+                // Use window.location for hard redirect to clear all state
+                window.location.href = '/';
               }}>
                 Logout
               </LoadingButton>
@@ -148,10 +150,12 @@ function MobileMenu({ uniqueLinks, pathname, user }: any) {
                       } catch (e) {
                         console.error('Sign out error:', e);
                       }
-                      // Clear user state regardless of backend response
+                      // Clear user state and localStorage
                       setUser(null);
+                      localStorage.removeItem('token');
                       setOpen(false);
-                      router.push('/');
+                      // Use window.location for hard redirect to clear all state
+                      window.location.href = '/';
                     }}
                   >
                     Logout

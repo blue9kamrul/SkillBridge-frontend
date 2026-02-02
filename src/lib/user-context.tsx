@@ -27,7 +27,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           const data = await res.json();
           alert(data.message || "Your account has been banned");
           setUser(null);
+          localStorage.removeItem('token');
           return Promise.reject("Banned");
+        }
+        if (res.status === 401) {
+          // Not authenticated - clear any stale data
+          console.log('[UserContext] 401 - clearing stale auth data');
+          localStorage.removeItem('token');
+          return Promise.reject("Not authenticated");
         }
         return res.ok ? res.json() : Promise.reject("Not authenticated");
       })

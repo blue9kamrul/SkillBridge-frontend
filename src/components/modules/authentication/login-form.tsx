@@ -22,10 +22,18 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useUser } from "@/lib/user-context";
+import { useEffect } from "react";
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
   const { setUser } = useUser();
+
+  // Clear any URL query parameters on mount to prevent auto-fill from persisted state
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   const handleGoogleLogin = async () => {
     try {
