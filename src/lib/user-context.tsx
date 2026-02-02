@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { getApiBaseUrl } from "./api-url";
 
 type UserType = any | null;
 type UserContextType = {
@@ -16,7 +17,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api")
       ? `${base}/user/me`
       : `${base}/api/user/me`;

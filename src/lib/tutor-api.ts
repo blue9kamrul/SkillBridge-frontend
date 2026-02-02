@@ -1,8 +1,9 @@
 // src/lib/tutor-api.ts
 // Simple API functions for tutor routes
+import { getApiBaseUrl } from "./api-url";
 
 const API_BASE = (() => {
-  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const base = getApiBaseUrl();
   return base.endsWith("/api") ? base : `${base}/api`;
 })();
 

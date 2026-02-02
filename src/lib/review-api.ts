@@ -6,7 +6,9 @@ export async function getAllReviews() {
   if (!res.ok) throw new Error("Failed to fetch reviews");
   return res.json();
 }
-const rawBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { getApiBaseUrl } from "./api-url";
+
+const rawBase = getApiBaseUrl();
 export const API_BASE = rawBase.endsWith("/api") ? rawBase : `${rawBase}/api`;
 
 export async function getReviewsByTutorId(tutorId: string) {
