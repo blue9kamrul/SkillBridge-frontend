@@ -6,13 +6,13 @@ A modern tutoring platform frontend that connects students with tutors. Built wi
 
 - **Live Application**: [https://skillbridge-frontend-phi.vercel.app/](https://skillbridge-frontend-phi.vercel.app/)
 - **Backend API**: [https://skillbridge-backend-evdp.onrender.com](https://skillbridge-backend-evdp.onrender.com)
-- **GitHub Repository**: [Repository URL]
 
 ## ✨ Features
 
 ### Student Features
-- Register and login (email/password & Google OAuth)
-- Browse tutors with advanced filters (subject, category, price, rating, experience)
+
+- Register and login (email/password)
+- Browse tutors with advanced filters (subject, category, price, rating)
 - View top-rated tutors on homepage
 - Book tutoring sessions instantly
 - Manage and cancel bookings
@@ -20,6 +20,7 @@ A modern tutoring platform frontend that connects students with tutors. Built wi
 - Update profile information
 
 ### Tutor Features
+
 - Create and manage tutor profile
 - Set hourly rates and bio
 - Manage categories/subjects
@@ -28,6 +29,7 @@ A modern tutoring platform frontend that connects students with tutors. Built wi
 - Respond to student reviews
 
 ### Admin Features
+
 - Dashboard with platform statistics
 - User management (roles, ban/unban)
 - Category management (CRUD operations)
@@ -40,7 +42,7 @@ A modern tutoring platform frontend that connects students with tutors. Built wi
 **Styling**: Tailwind CSS 4, Radix UI, shadcn/ui  
 **Forms**: @tanstack/react-form with Zod validation  
 **Auth**: Better Auth 1.4.12  
-**HTTP Client**: Native Fetch API with proxy configuration  
+**HTTP Client**: Native Fetch API with proxy configuration
 
 ## 📁 Project Structure
 
@@ -68,23 +70,27 @@ frontend/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm/yarn/pnpm
 
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone <repository-url>
 cd frontend
 ```
 
 2. Install dependencies
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables
+
 ```bash
 # Create .env.local file
 NEXT_PUBLIC_API_URL=http://localhost:5000
@@ -109,17 +115,21 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## 🏗️ Architecture
 
 ### Proxy Configuration
+
 The app uses Next.js rewrites to proxy API calls through the same origin, solving cross-origin cookie issues:
+
 - All `/api/*` requests are proxied to the backend
 - Configured in `next.config.ts`
 
 ### Authentication Flow
+
 - Better Auth handles session management
-- Supports email/password and Google OAuth
+- Supports email/password
 - Session cookies are httpOnly and secure
 - Auto-redirect to login for protected routes
 
 ### API Integration
+
 - Centralized API helpers in `src/lib/`
 - `getApiBaseUrl()` helper for environment-aware URLs
 - Consistent error handling across all API calls
@@ -138,22 +148,12 @@ The app uses Next.js rewrites to proxy API calls through the same origin, solvin
 ## 🎨 UI Components
 
 Built with shadcn/ui and Radix UI:
+
 - Form components with validation
 - Cards, buttons, dialogs
 - Tables for data display
 - Toast notifications
 - Responsive navigation
-
-## Learn More
-
-To learn more about the technologies used:
-
-- [Next.js Documentation](https://nextjs.org/docs) - Next.js features and API
-- [React Documentation](https://react.dev) - React 19 features
-- [Tailwind CSS](https://tailwindcss.com/docs) - Utility-first CSS
-- [shadcn/ui](https://ui.shadcn.com) - Re-usable components
-- [Better Auth](https://www.better-auth.com) - Authentication library
-- [Radix UI](https://www.radix-ui.com) - Headless UI components
 
 ## 🚀 Deployment
 
