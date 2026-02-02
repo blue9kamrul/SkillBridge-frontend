@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,21 @@ import { useRouter } from "next/navigation";
 
 export default function CreateBookingForm({ tutorIdFromQuery }: { tutorIdFromQuery: string }) {
   const [loading, setLoading] = useState(false);
+  const [tutor, setTutor] = useState<any>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (tutorIdFromQuery) {
+      const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const url = base.endsWith("/api") ? `${base}/tutors/${tutorIdFromQuery}` : `${base}/api/tutors/${tutorIdFromQuery}`;
+      fetch(url, { credentials: "include" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) setTutor(data.data);
+        })
+        .catch(() => {});
+    }
+  }, [tutorIdFromQuery]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,6 +68,13 @@ export default function CreateBookingForm({ tutorIdFromQuery }: { tutorIdFromQue
             <CardTitle>Create Booking</CardTitle>
           </CardHeader>
           <CardContent>
+            {tutor?.availability && (
+              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-sm font-semibold text-green-800">📅 Tutor Availability</p>
+                <p className="text-sm text-green-700 mt-1">{tutor.availability}</p>
+                <p className="text-xs text-green-600 mt-1">⚠️ Bookings outside these hours will be rejected</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-sm font-medium">Tutor ID</label>

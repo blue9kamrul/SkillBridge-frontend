@@ -114,6 +114,14 @@ export default function TutorDetailsPage() {
                 </div>
               </div>
 
+              {tutor.availability && (
+                <div>
+                  <p className="text-sm text-muted-foreground">Availability</p>
+                  <p className="mt-1 text-green-600 font-medium">📅 {tutor.availability}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Please book within these hours</p>
+                </div>
+              )}
+
               {/* Reviews */}
               {tutor.reviews && tutor.reviews.length > 0 && (
                 <div className="mt-8">

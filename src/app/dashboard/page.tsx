@@ -15,6 +15,8 @@ export default function DashboardPage() {
   const [editing, setEditing] = useState(false);
   const [bio, setBio] = useState("");
   const [subjects, setSubjects] = useState("");
+  const [availability, setAvailability] = useState("");
+  const [averageRating, setAverageRating] = useState<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +34,13 @@ export default function DashboardPage() {
           if (data.data.tutorProfile) {
             setBio(data.data.tutorProfile.bio || "");
             setSubjects(Array.isArray(data.data.tutorProfile.subjects) ? data.data.tutorProfile.subjects.join(", ") : data.data.tutorProfile.subjects);
+            setAvailability(data.data.tutorProfile.availability || "");
+            
+            // Calculate average rating
+            if (data.data.tutorProfile.reviews && data.data.tutorProfile.reviews.length > 0) {
+              const total = data.data.tutorProfile.reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+              setAverageRating(total / data.data.tutorProfile.reviews.length);
+            }
           }
         } else {
           toast.error("Failed to load dashboard");
@@ -51,6 +60,7 @@ export default function DashboardPage() {
       body: JSON.stringify({
         bio,
         subjects: subjects.split(",").map((s) => s.trim()),
+        availability,
       }),
     });
     
@@ -89,7 +99,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle>Profile</CardTitle>
                   {profile.role === "TUTOR" && !editing && (
-                    <Button size="sm" onClick={() => setEditing(true)}>Edit Profile</Button>
+                    <Button size="sm" onClick={() => setEditing(true)}>Edit Bio</Button>
                   )}
                 </div>
               </CardHeader>
@@ -111,6 +121,12 @@ export default function DashboardPage() {
                     <p className="text-sm text-muted-foreground">Role</p>
                     <p className="font-medium capitalize">{profile.role?.toLowerCase()}</p>
                   </div>
+                  {profile.role === "TUTOR" && profile.tutorProfile && averageRating !== null && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">Average Rating</p>
+                      <p className="font-medium">{averageRating.toFixed(1)} ⭐ ({profile.tutorProfile.reviews?.length || 0} reviews)</p>
+                    </div>
+                  )}
                   {profile.role === "TUTOR" && profile.tutorProfile && (
                     <>
                       <div className="sm:col-span-2">
@@ -141,6 +157,23 @@ export default function DashboardPage() {
                           <p className="font-medium">{Array.isArray(profile.tutorProfile.subjects) ? profile.tutorProfile.subjects.join(", ") : profile.tutorProfile.subjects}</p>
                         )}
                       </div>
+                      <div className="sm:col-span-2">
+                        <p className="text-sm text-muted-foreground mb-2">Availability</p>
+                        {editing ? (
+                          <>
+                            <textarea
+                              value={availability}
+                              onChange={(e) => setAvailability(e.target.value)}
+                              className="w-full rounded-md border px-3 py-2"
+                              rows={2}
+                              placeholder="e.g., Mon-Fri 9AM-5PM, Weekends 10AM-2PM"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">Describe your available hours</p>
+                          </>
+                        ) : (
+                          <p className="font-medium">{profile.tutorProfile.availability || "Not set"}</p>
+                        )}
+                      </div>
                       {editing && (
                         <div className="sm:col-span-2 flex gap-2">
                           <Button onClick={handleUpdateTutorProfile}>Save Changes</Button>
@@ -148,6 +181,7 @@ export default function DashboardPage() {
                             setEditing(false);
                             setBio(profile.tutorProfile.bio || "");
                             setSubjects(Array.isArray(profile.tutorProfile.subjects) ? profile.tutorProfile.subjects.join(", ") : profile.tutorProfile.subjects);
+                            setAvailability(profile.tutorProfile.availability || "");
                           }}>Cancel</Button>
                         </div>
                       )}
