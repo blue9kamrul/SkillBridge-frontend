@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import LoadingButton from "@/components/LoadingButton";
 import { toast } from "sonner";
 import Link from "next/link";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<any[]>([]);
@@ -16,7 +17,7 @@ export default function AdminUsers() {
   }, []);
 
   const loadUsers = () => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/admin/users` : `${base}/api/admin/users`;
     fetch(url, { credentials: "include" })
       .then((res) => res.json())
@@ -29,7 +30,7 @@ export default function AdminUsers() {
   };
 
   const updateStatus = async (userId: string, status: string) => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/admin/users/${userId}/ban-status` : `${base}/api/admin/users/${userId}/ban-status`;
     const response = await fetch(url, {
       method: "PATCH",
@@ -48,7 +49,7 @@ export default function AdminUsers() {
   };
 
   const updateRole = async (userId: string, role: string) => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/admin/users/${userId}` : `${base}/api/admin/users/${userId}`;
     const response = await fetch(url, {
       method: "PATCH",

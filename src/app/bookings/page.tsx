@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUser } from "@/lib/user-context";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 
 export default function BookingsPage() {
@@ -13,7 +14,7 @@ export default function BookingsPage() {
   const { user } = useUser();
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/bookings` : `${base}/api/bookings`;
     fetch(url, { credentials: "include" })
       .then((res) => res.json())
@@ -27,7 +28,7 @@ export default function BookingsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this booking?")) return;
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/bookings/${id}` : `${base}/api/bookings/${id}`;
     const res = await fetch(url, {
       method: "DELETE",

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null);
@@ -21,7 +22,7 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const apiUrl = getApiBaseUrl();
     
     // Fetch user profile
     fetch(`${apiUrl}/api/user/me`, { credentials: "include" })
@@ -67,7 +68,7 @@ export default function DashboardPage() {
   }, [router]);
 
   const handleUpdateTutorProfile = async () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const apiUrl = getApiBaseUrl();
     const url = apiUrl.endsWith("/api") ? `${apiUrl}/tutors/profile` : `${apiUrl}/api/tutors/profile`;
     
     const res = await fetch(url, {

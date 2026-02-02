@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 export default function BecomeTutorPage() {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,8 @@ export default function BecomeTutorPage() {
       experience: parseInt(formData.get("experience") as string),
     };
 
-    const response = await fetch((process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/api$/, "") + "/api/tutors/become-tutor", {
+    const base = getApiBaseUrl();
+    const response = await fetch(`${base}/api/tutors/become-tutor`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

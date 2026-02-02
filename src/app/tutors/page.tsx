@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import Link from "next/link";
+import { getApiBaseUrl } from "@/lib/api-url";
 
 export default function TutorsPage() {
   const [tutors, setTutors] = useState<any[]>([]);
@@ -20,7 +21,7 @@ export default function TutorsPage() {
   const [maxPrice, setMaxPrice] = useState<string>("");
 
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     
     // Fetch categories
     fetch(`${base}/api/categories`, { credentials: "include" })
@@ -35,7 +36,7 @@ export default function TutorsPage() {
   }, []);
 
   const fetchTutors = (filters = {}) => {
-    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const base = getApiBaseUrl();
     const url = base.endsWith("/api") ? `${base}/tutors` : `${base}/api/tutors`;
     
     // Build query params
